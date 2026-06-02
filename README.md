@@ -47,11 +47,11 @@ Allocated specific hardware resources to balance host performance and lab requir
 ---
 
 ## Phase 2: SIEM Configuration & Telemetry Routing
-Established the central logging infrastructure and configured the victim machine to forward event data.
+Established the SIEM for centralized logging and configured the victim machine to forward event data.
 
 ### 1. Splunk Enterprise Deployment
 1. Downloaded Splunk to the Ubuntu server via `wget` and installed using `sudo dpkg -i`.
-2. Successfully started the `splunkd` service and accessed the web GUI via `http://192.168.20.128:8000`.
+2. Successfully started the `splunkd` service and accessed the web GUI on the Windows 10 VM via `http://192.168.20.128:8000`.
 3. Configured Splunk to actively listen for incoming data on Port 9997.
 
 ![Splunk Running Confirmed](images/Splunk%20running%20confirmed.png)
@@ -60,7 +60,7 @@ Established the central logging infrastructure and configured the victim machine
 ### 2. Universal Forwarder Installation
 1. Installed Splunk Universal Forwarder (v10.2.2) on the Windows 10 VM.
 2. Pointed the forwarder to the Ubuntu IP (`192.168.20.128`) on Port 9997.
-3. Verified the Splunk Forwarder service was active in Windows `services.msc`.
+3. Verified the Splunk Forwarder service was active on the Windows VM `services.msc`.
 
 ![Splunk Forwarder Running](images/SplunkForwarderRunning.png)
 ![Splunk IP Link Established](images/Splunk%20Working%20On%20IP%20Link.png)
@@ -68,7 +68,7 @@ Established the central logging infrastructure and configured the victim machine
 ---
 
 ## Phase 3: Advanced Telemetry Configuration
-Standard Windows event logs often lack the granularity needed for deep threat hunting. Sysmon was integrated to capture specific execution paths and process histories.
+Standard Windows event logs often are too shallow and offer unsatisfactory information for deep threat hunting. Sysmon was integrated to capture specific execution paths and process histories.
 
 ### 1. Sysmon Implementation
 1. Downloaded Sysinternals Sysmon to the Windows VM.
