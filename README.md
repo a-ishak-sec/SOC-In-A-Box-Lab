@@ -85,4 +85,31 @@ Standard Windows event logs often lack the granularity needed for deep threat hu
 Conducted three separate attack simulations to verify that the SIEM was correctly ingesting, parsing, and displaying malicious activity.
 
 ### Simulation A: Brute Force Authentication
-1.
+1. **The Attack:** Manually triggered 10 consecutive failed login attempts on the Windows VM to simulate a brute force credential attack.
+2. **The Detection:** Queried Splunk for `index=* sourcetype="WinEventLog:Security"`. Identified a massive spike in activity. Investigated individual logs to confirm the presence of `Event ID 4625` (An account failed to log on).
+
+![SIEM Logon Surge](images/Seim%20registering%20surge%20of%20logon%20attempts.png)
+![Event ID 4625 Detected](images/Seim%20Detecting%20Failed%20Login%20Code%204625.png)
+![Login Fail Details](images/Deeper%20look%20at%20login%20fail%20reason%20device%20etc.png)
+
+### Simulation B: Suspicious Command Line Discovery
+1. **The Attack:** Simulated basic adversary reconnaissance by executing `whoami`, `ipconfig /all`, and `net user` in the Windows command prompt.
+2. **The Detection:** Used the search `index="main" source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" | stats count by CommandLine`. Successfully located exactly 5 instances of `ipconfig /all`, 5 of `net user`, and 4 of `whoami`.
+3. **Deep Dive:** Used a targeted query referencing `ParentImage` to prove that `C:\Windows\System32\cmd.exe` was the root source of the execution, confirming Sysmon's tracking capabilities.
+
+### Simulation C: Persistence via Atomic Red Team
+1. **The Attack:** Downloaded and installed the Invoke-AtomicRedTeam execution engine via PowerShell. Triggered a test simulating an attacker establishing persistence via Registry Run Keys: `Invoke-AtomicTest T1547.001 -TestNumbers 1 -PathToAtomicsFolder "C:\AtomicRedTeam\atomics\atomics" -Force`.
+2. **The Detection:** Searched Splunk for PowerShell parent images (`index=* (Image="*powershell.exe" OR ParentImage="*powershell.exe") | table _time, Computer, User, CommandLine, ParentCommandLine | sort - _time`). Successfully identified the exact timestamp and the `reg.exe` commands executing the persistence attack.
+
+![Atomic Red Team Installed](images/Invoke%20red%20team%20is%20active%20and%20installed.png)
+![Registry Attack Executing](images/Atomic%20Red%20Team%20registry%20attack%20running.png)
+![Attack Run Success](images/Atomic%20Red%20Team%20Reg%20Key%20Run%20Success.png)
+![Attack Logged in SIEM](images/Atomic%20Red%20Team%20Reg%20Key%20Logged.png)
+
+---
+
+## Challenges Faced
+
+1. **Splunk Root Execution Deprecation:** During the Ubuntu Splunk installation, running the start command threw a warning that root execution was deprecated. After researching the warning, I purposefully bypassed it using `--run-as-root` to keep the lab environment strictly focused on ingestion rather than complex Linux permission management.
+2. **SIEM Resource Overload:** Initially, the Splunk dashboard showed no logs and displayed a yellow warning sign indicating output degradation. The 4 GB RAM allocation on the VM was struggling to process the realtime "All Time" query of the Windows Security logs. Changing the timeframe scope to "Realtime: 30 Minute Window" immediately resolved the latency and allowed the data to populate.
+3. **EDR/Antivirus Interference:** When unzipping the Atomic Red Team library, Windows Defender triggered severe alerts (flagging `wacatac.b!ml` and `malgent!MSR`) and actively deleted the simulation scripts. To allow the simulation to proceed, I configured a specific exclusion path in Defender using PowerShell (`Add-MpPreference -ExclusionPath "C:\AtomicRedTeam"`), effectively bypassing the host protection.
