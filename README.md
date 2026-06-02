@@ -1,7 +1,7 @@
-# SOC-in-a-Box: SIEM Setup and Threat Simulation Lab
+# SOC-in-a-Box: Splunk SIEM Setup and Threat Simulation Lab
 
 ## Project Overview
-This repository documents the architecture and configuration of a local Security Operations Center (SOC) environment. The objective of this lab is to establish a functional SIEM, generate detailed endpoint telemetry, and validate threat detection capabilities through simulated cyber attacks.
+This repository documents the construction, configuration, and testing of a virtualized SOC environment. The objective of this lab is to develop a functional virtual SIEM, generate detailed and relevant telemetry, and demonstrate the SIEM’s threat detection capabilities through simulated manual and automated cyber attacks.
 
 **Tools & Technologies Used:**
 1. VMware Workstation Pro
@@ -14,21 +14,21 @@ This repository documents the architecture and configuration of a local Security
 ---
 
 ## Phase 1: Environment Setup & Operational Security
-To ensure a secure and controlled lab environment, all software binaries were verified before installation to mitigate the risk of introducing unknown malware. 
+To ensure a secure lab environment and minimize potential attack vectors, all software installed on the host machine was verified to mitigate the risk of introducing unknown malware. 
 
 ### 1. Verification of Host Hypervisor
 The VMware Workstation Pro installer was downloaded from the official Broadcom portal. 
-1. Verified the digital signature of the executable belonged to "Broadcom Inc."
-2. Utilized PowerShell's `Get-FileHash` command to confirm the SHA hash matched the official documentation (`10fe3a36f525d88aa133118ab3b5a16b18da88d4aa11b14d74e4164b3fb94ba9`).
+1. Verified the digital signature of the .exe file belonging to "Broadcom Inc."
+2. Executed PowerShell's `Get-FileHash` command to verify the SHA hash matched the official documentation (`10fe3a36f525d88aa133118ab3b5a16b18da88d4aa11b14d74e4164b3fb94ba9`).
 
 ![Broadcom Digital Signature](images/Confirming%20VMware%20Installer%20Digital%20Signature.png)
 ![Broadcom Official Hash](images/Broadcom%20File%20Hash%20Official%20VM.png)
 ![Calculated Installer Hash](images/Confirming%20File%20Hash%20VM.png)
 
 ### 2. Operating System Verification
-Clean installations of Ubuntu and Windows were prioritized over reusing old local ISOs. 
+New and clean installations of Ubuntu and Windows were prioritized over reusing old unfamiliar ISOs. 
 1. Verified the Windows .exe installer digital signatures.
-2. Verified the Ubuntu ISO hashes against the official Canonical documentation.
+2. Verified the Ubuntu ISO hashes against the official websites documentation using PowerShell.
 
 ![Windows Installer Signature](images/Confirming%20Windows%20Installer%20Digital%20Signature%20.png)
 ![Ubuntu Official Hash](images/Ubuntu%20ISO%20Hash%20Official.png)
@@ -36,9 +36,9 @@ Clean installations of Ubuntu and Windows were prioritized over reusing old loca
 
 ### 3. Virtual Machine Provisioning
 Allocated specific hardware resources to balance host performance and lab requirements.
-1. **Windows 10 VM:** 60 GB Disk, 4 GB RAM, 2 Cores. Installed VMware Tools for environment management.
+1. **Windows 10 VM:** 60 GB Disk, 4 GB RAM, 2 Cores. Installed VMware Tools for facilitation of management.
 2. **Ubuntu VM:** 40 GB Disk, 4 GB RAM, 2 Cores. Executed `sudo apt update && sudo apt upgrade -y` for baseline security patches. 
-3. Confirmed network connectivity by successfully pinging the Ubuntu Server (`192.168.20.128`) from the Windows host.
+3. Confirmed network connectivity between VM's by successfully pinging the Ubuntu Server (`192.168.20.128`) from the Windows host.
 
 ![Windows 10 System Info](images/Windows%2010%20VM%20System%20Info.png)
 ![Ubuntu System Info](images/Ubuntu%20VM%20System%20Info.png)
