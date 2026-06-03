@@ -3,7 +3,7 @@
 ## Project Overview
 This repository presents the creation, configuration, and testing of a virtualized SOC environment. The objective of this lab is to develop a virtual SIEM, generate detailed and relevant telemetry, and demonstrate the SIEM’s threat detection capabilities through simulated cyber attacks.
 
-![SOC Lab Network and Data Flow Map](images/SOCINABOXDIAGRAM.png)
+![SOC Lab Network and Data Flow Map](images/SOCINABOXDIAGRAM2.png)
 
 ### Key Skills Demonstrated
 * **SIEM Creation & Configuration:** Built a centralized logging environment using Splunk Enterprise on Ubuntu Server.
