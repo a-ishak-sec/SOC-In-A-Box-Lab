@@ -4,29 +4,28 @@
 This repository presents the creation, configuration, and testing of a virtualized SOC environment. The objective of this lab is to develop a virtual SIEM, generate detailed and relevant telemetry, and demonstrate the SIEM’s threat detection capabilities through simulated cyber attacks.
 
 ```mermaid
-graph LR
-    %% Data Sources
-    subgraph Target Endpoint [Windows 10 Victim]
-        A[Atomic Red Team<br>Simulation Engine] -->|Triggers Malicious Activity| B(Sysmon & Windows Logs)
-        B -->|Gathers High-Fidelity Data| C[Splunk Universal Forwarder]
+graph TD
+    %% Top Tier: The Simulation
+    subgraph Simulation Layer [1. Attack Generation]
+        A[Invoke-AtomicTest] -->|Executes Registry & Recon Frameworks| B[Windows 10 Target]
     end
 
-    %% Network Transit
-    C -->|Forwards Telemetry<br>Port 9997| D
-
-    %% SIEM Storage
-    subgraph Core SIEM [Ubuntu Server]
-        D[Splunk Enterprise]
+    %% Middle Tier: Processing
+    subgraph Collection Layer [2. Telemetry Processing]
+        B -->|Logs Enriched via| C[Microsoft Sysmon]
+        C -->|Shipped via| D[Splunk Universal Forwarder]
     end
 
-    %% Human Element
-    D -->|Populates Dashboards| E((Security Analyst))
-    E -->|Executes SPL Queries &<br>Validates Detections| D
+    %% Bottom Tier: SIEM & Ingestion
+    subgraph Analytics Layer [3. Central SOC Server]
+        D -->|Pushed over Port 9997| E[Splunk Enterprise on Ubuntu]
+        F((Security Analyst)) -->|Monitors Spikes & Logs via Port 8000| E
+    end
 
-    %% Custom Colors
-    style Target Endpoint fill:#111c24,stroke:#38bdf8,stroke-width:2px
-    style Core SIEM fill:#111c24,stroke:#f97316,stroke-width:2px
-    style E fill:#1e293b,stroke:#a855f7,stroke-width:2px
+    %% Color Adjustments
+    style Simulation Layer fill:#18181b,stroke:#ef4444,stroke-width:2px
+    style Collection Layer fill:#18181b,stroke:#3b82f6,stroke-width:2px
+    style Analytics Layer fill:#18181b,stroke:#22c55e,stroke-width:2px
 ```
 
 
