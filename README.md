@@ -5,24 +5,22 @@ This repository presents the creation, configuration, and testing of a virtualiz
 
 ```mermaid
 graph LR
-    %% Left Side - Endpoint Data Input
-    A[Atomic Red Team Simulations] -->|Host Activity| B[Windows 10 Endpoint]
-    C[Sysmon Telemetry] -->|Event Resolution| B
-    B -->|Splunk Universal Forwarder| CentralSIEM
+    %% Nodes
+    A[Atomic Red Team] ===> B[Windows 10 VM]
+    C[Sysmon] ===> B
+    B ---->|Universal Forwarder| D[Splunk Enterprise VM]
+    E((Analytic Investigator)) ====>|SPL Queries| D
 
-    %% Center Hub - The SIEM Server
-    subgraph Server [Ubuntu 24.04 Server]
-        CentralSIEM[Splunk Enterprise<br>Port 9997 Listener]
-    end
+    %% Connections
+    linkStyle 2 stroke:#38bdf8,stroke-width:3px;
+    linkStyle 3 stroke:#a855f7,stroke-width:3px;
 
-    %% Right Side - User Output
-    CentralSIEM -->|Web Interface: Port 8000| Analyst[Security Analyst]
-    Analyst -->|Threat Hunting & Log Auditing| CentralSIEM
-
-    %% Visual Styling
-    style Server fill:#0f172a,stroke:#e2e8f0,stroke-width:2px
-    style CentralSIEM fill:#1e293b,stroke:#f97316,stroke-width:2px
-    style Analyst fill:#1e293b,stroke:#06b6d4,stroke-width:2px
+    %% Formatting
+    style A fill:#27272a,stroke:#71717a
+    style B fill:#172554,stroke:#2563eb,stroke-width:2px
+    style C fill:#27272a,stroke:#71717a
+    style D fill:#2c1605,stroke:#ea580c,stroke-width:2px
+    style E fill:#2e1065,stroke:#7c3aed,stroke-width:2px
 ```
 
 
