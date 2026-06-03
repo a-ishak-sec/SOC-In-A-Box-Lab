@@ -4,28 +4,25 @@
 This repository presents the creation, configuration, and testing of a virtualized SOC environment. The objective of this lab is to develop a virtual SIEM, generate detailed and relevant telemetry, and demonstrate the SIEM’s threat detection capabilities through simulated cyber attacks.
 
 ```mermaid
-graph TD
-    %% Top Tier: The Simulation
-    subgraph Simulation Layer [1. Attack Generation]
-        A[Invoke-AtomicTest] -->|Executes Registry & Recon Frameworks| B[Windows 10 Target]
+graph LR
+    %% Left Side - Endpoint Data Input
+    A[Atomic Red Team Simulations] -->|Host Activity| B[Windows 10 Endpoint]
+    C[Sysmon Telemetry] -->|Event Resolution| B
+    B -->|Splunk Universal Forwarder| CentralSIEM
+
+    %% Center Hub - The SIEM Server
+    subgraph Server [Ubuntu 24.04 Server]
+        CentralSIEM[Splunk Enterprise<br>Port 9997 Listener]
     end
 
-    %% Middle Tier: Processing
-    subgraph Collection Layer [2. Telemetry Processing]
-        B -->|Logs Enriched via| C[Microsoft Sysmon]
-        C -->|Shipped via| D[Splunk Universal Forwarder]
-    end
+    %% Right Side - User Output
+    CentralSIEM -->|Web Interface: Port 8000| Analyst[Security Analyst]
+    Analyst -->|Threat Hunting & Log Auditing| CentralSIEM
 
-    %% Bottom Tier: SIEM & Ingestion
-    subgraph Analytics Layer [3. Central SOC Server]
-        D -->|Pushed over Port 9997| E[Splunk Enterprise on Ubuntu]
-        F((Security Analyst)) -->|Monitors Spikes & Logs via Port 8000| E
-    end
-
-    %% Color Adjustments
-    style Simulation Layer fill:#18181b,stroke:#ef4444,stroke-width:2px
-    style Collection Layer fill:#18181b,stroke:#3b82f6,stroke-width:2px
-    style Analytics Layer fill:#18181b,stroke:#22c55e,stroke-width:2px
+    %% Visual Styling
+    style Server fill:#0f172a,stroke:#e2e8f0,stroke-width:2px
+    style CentralSIEM fill:#1e293b,stroke:#f97316,stroke-width:2px
+    style Analyst fill:#1e293b,stroke:#06b6d4,stroke-width:2px
 ```
 
 
