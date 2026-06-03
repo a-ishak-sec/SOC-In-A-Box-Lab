@@ -4,23 +4,30 @@
 This repository presents the creation, configuration, and testing of a virtualized SOC environment. The objective of this lab is to develop a virtual SIEM, generate detailed and relevant telemetry, and demonstrate the SIEM’s threat detection capabilities through simulated cyber attacks.
 
 ```mermaid
-graph LR
-    %% Nodes
-    A[Atomic Red Team] ===> B[Windows 10 VM]
-    C[Sysmon] ===> B
-    B ---->|Universal Forwarder| D[Splunk Enterprise VM]
-    E((Analytic Investigator)) ====>|SPL Queries| D
+flowchart LR
 
-    %% Connections
-    linkStyle 2 stroke:#38bdf8,stroke-width:3px;
-    linkStyle 3 stroke:#a855f7,stroke-width:3px;
+    subgraph Windows["Windows 10 Endpoint"]
+        ATTACK["Atomic Red Team<br/>Recon Commands"]
+        SYSMON["Sysmon"]
+        LOGS["Security Telemetry"]
+    end
 
-    %% Formatting
-    style A fill:#27272a,stroke:#71717a
-    style B fill:#172554,stroke:#2563eb,stroke-width:2px
-    style C fill:#27272a,stroke:#71717a
-    style D fill:#2c1605,stroke:#ea580c,stroke-width:2px
-    style E fill:#2e1065,stroke:#7c3aed,stroke-width:2px
+    subgraph Ubuntu["Ubuntu Server"]
+        SPLUNK["Splunk Enterprise"]
+    end
+
+    ATTACK --> LOGS
+    SYSMON --> LOGS
+
+    LOGS --> FORWARDER["Splunk Universal Forwarder"]
+
+    FORWARDER -->|"Port 9997"| SPLUNK
+
+    SPLUNK --> HUNT["Threat Hunting"]
+
+    SPLUNK --> DETECT["Detection Validation"]
+
+    USER["Security Analyst"] --> SPLUNK
 ```
 
 
