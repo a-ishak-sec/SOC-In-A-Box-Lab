@@ -3,6 +3,15 @@
 ## Project Overview
 This repository documents the construction, configuration, and testing of a virtualized SOC environment. The objective of this lab is to develop a functional virtual SIEM, generate detailed and relevant telemetry, and demonstrate the SIEM’s threat detection capabilities through simulated manual and automated cyber attacks.
 
+### Key Skills Demonstrated
+* **SIEM Deployment & Configuration:** Built a centralized logging environment using Splunk Enterprise on Ubuntu Server.
+* **Telemetry Enhancement:** Deployed Microsoft Sysmon with customized configurations to capture high-fidelity host logs.
+* **Log Ingestion & Data Routing:** Configured the Splunk Universal Forwarder to safely transmit Windows security events over Port 9997.
+* **Attack Simulation:** Executed automated adversary behaviors utilizing the Atomic Red Team framework.
+* **Threat Hunting & Analytics:** Authored custom SPL queries to analyze process execution chains and parent-child relationships.
+* **Operational Security Practice:** Practiced robust supply-chain defense through cryptographic hash and digital signature validation.
+* **Technical Troubleshooting:** Successfully managed VM resource constraints, software deprecation warnings, and local EDR conflicts.
+
 **Tools & Technologies Used:**
 1. VMware Workstation Pro
 2. Ubuntu Server 24.04.4 LTS (Splunk Enterprise Server)
