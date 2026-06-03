@@ -3,13 +3,13 @@
 ## Project Overview
 This repository presents the creation, configuration, and testing of a virtualized SOC environment. The objective of this lab is to develop a virtual SIEM, generate detailed and relevant telemetry, and demonstrate the SIEM’s threat detection capabilities through simulated cyber attacks.
 
-graph TD
+    graph TD
     %% Subgraph for the Host Environment
     subgraph VMware Workstation Pro (Host Hypervisor)
         
         %% Windows VM Box
         subgraph Windows 10 VM (Victim Endpoint)
-            A[Atomic Red Team<br><i>Simulation Engine</i>] -->|Generates Attacks| B(Windows Event Logs)
+            A[Atomic Red Team<br>Simulation Engine] -->|Generates Attacks| B(Windows Event Logs)
             C[Microsoft Sysmon] -->|Enhances Telemetry| B
             B -->|Raw Security Data| D[Splunk Universal Forwarder]
         end
@@ -32,7 +32,6 @@ graph TD
     %% Styling
     style Windows 10 VM (Victim Endpoint) fill:#1e293b,stroke:#38bdf8,stroke-width:2px;
     style Ubuntu Server 24.04 VM (SIEM) fill:#1e293b,stroke:#f97316,stroke-width:2px;
-    style VMware Workstation Pro (Host Hypervisor) fill:#0f172a,stroke:#64748b,stroke-dasharray: 5 5;
 
 ### Key Skills Demonstrated
 * **SIEM Creation & Configuration:** Built a centralized logging environment using Splunk Enterprise on Ubuntu Server.
