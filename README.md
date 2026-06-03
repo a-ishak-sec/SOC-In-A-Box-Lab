@@ -1,15 +1,46 @@
 # SOC-in-a-Box: Splunk SIEM Setup and Threat Simulation Lab
 
 ## Project Overview
-This repository documents the construction, configuration, and testing of a virtualized SOC environment. The objective of this lab is to develop a functional virtual SIEM, generate detailed and relevant telemetry, and demonstrate the SIEM’s threat detection capabilities through simulated manual and automated cyber attacks.
+This repository presents the creation, configuration, and testing of a virtualized SOC environment. The objective of this lab is to develop a virtual SIEM, generate detailed and relevant telemetry, and demonstrate the SIEM’s threat detection capabilities through simulated cyber attacks.
+
+graph TD
+    %% Subgraph for the Host Environment
+    subgraph VMware Workstation Pro (Host Hypervisor)
+        
+        %% Windows VM Box
+        subgraph Windows 10 VM (Victim Endpoint)
+            A[Atomic Red Team<br><i>Simulation Engine</i>] -->|Generates Attacks| B(Windows Event Logs)
+            C[Microsoft Sysmon] -->|Enhances Telemetry| B
+            B -->|Raw Security Data| D[Splunk Universal Forwarder]
+        end
+
+        %% Ubuntu VM Box
+        subgraph Ubuntu Server 24.04 VM (SIEM)
+            E[Splunk Enterprise]
+            F[Port 9997 Listener] -->|Ingests Logs| E
+            G[Splunk Add-on for Windows] -->|Parses & Normalizes XML Fields| E
+        end
+        
+    end
+
+    %% Connection Line between VMs
+    D -->|Forwards Telemetry via TLS/TCP| F
+
+    %% User Interaction
+    H((You: The Defender)) -->|Analytic Hunting & SPL Queries via Port 8000| E
+
+    %% Styling
+    style Windows 10 VM (Victim Endpoint) fill:#1e293b,stroke:#38bdf8,stroke-width:2px;
+    style Ubuntu Server 24.04 VM (SIEM) fill:#1e293b,stroke:#f97316,stroke-width:2px;
+    style VMware Workstation Pro (Host Hypervisor) fill:#0f172a,stroke:#64748b,stroke-dasharray: 5 5;
 
 ### Key Skills Demonstrated
-* **SIEM Deployment & Configuration:** Built a centralized logging environment using Splunk Enterprise on Ubuntu Server.
-* **Telemetry Enhancement:** Deployed Microsoft Sysmon with customized configurations to capture high-fidelity host logs.
-* **Log Ingestion & Data Routing:** Configured the Splunk Universal Forwarder to safely transmit Windows security events over Port 9997.
-* **Attack Simulation:** Executed automated adversary behaviors utilizing the Atomic Red Team framework.
-* **Threat Hunting & Analytics:** Authored custom SPL queries to analyze process execution chains and parent-child relationships.
-* **Operational Security Practice:** Practiced robust supply-chain defense through cryptographic hash and digital signature validation.
+* **SIEM Creation & Configuration:** Built a centralized logging environment using Splunk Enterprise on Ubuntu Server.
+* **Log Enhancement:** Deployed Microsoft Sysmon with custom configuration to capture higher quality in depth windows logs.
+* **Log Forwarding:** Configured the Splunk Universal Forwarder to direct Windows security events over Port 9997 to the Ubuntu VM.
+* **Attack Simulation:** Executed automated adversary behaviors through Atomic Red Team.
+* **Threat Hunting & Analytics:** Utilized SPL queries to analyze logs, events and parent-child relationships.
+* **Clean Security Practice:** Practiced supply-chain defense through verifying the hashes and digital signatures of installed software.
 * **Technical Troubleshooting:** Successfully managed VM resource constraints, software deprecation warnings, and local EDR conflicts.
 
 **Tools & Technologies Used:**
