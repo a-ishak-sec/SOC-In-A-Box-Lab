@@ -3,35 +3,37 @@
 ## Project Overview
 This repository presents the creation, configuration, and testing of a virtualized SOC environment. The objective of this lab is to develop a virtual SIEM, generate detailed and relevant telemetry, and demonstrate the SIEM’s threat detection capabilities through simulated cyber attacks.
 
-    graph TD
-    %% Subgraph for the Host Environment
-    subgraph VMware Workstation Pro (Host Hypervisor)
-        
-        %% Windows VM Box
-        subgraph Windows 10 VM (Victim Endpoint)
-            A[Atomic Red Team<br>Simulation Engine] -->|Generates Attacks| B(Windows Event Logs)
-            C[Microsoft Sysmon] -->|Enhances Telemetry| B
-            B -->|Raw Security Data| D[Splunk Universal Forwarder]
+```mermaid
+flowchart LR
+
+    subgraph Host["VMware Workstation Pro"]
+    
+        subgraph Win["Windows 10 VM"]
+            ART["Atomic Red Team"]
+            CMD["Recon Commands<br/>whoami, net user, ipconfig"]
+            SYSMON["Microsoft Sysmon"]
+            WINLOGS["Windows Event Logs"]
+            UF["Splunk Universal Forwarder"]
         end
 
-        %% Ubuntu VM Box
-        subgraph Ubuntu Server 24.04 VM (SIEM)
-            E[Splunk Enterprise]
-            F[Port 9997 Listener] -->|Ingests Logs| E
-            G[Splunk Add-on for Windows] -->|Parses & Normalizes XML Fields| E
+        subgraph Ubuntu["Ubuntu Server 24.04 VM"]
+            SPLUNK["Splunk Enterprise"]
         end
-        
+
     end
 
-    %% Connection Line between VMs
-    D -->|Forwards Telemetry via TLS/TCP| F
+    ART --> WINLOGS
+    CMD --> WINLOGS
+    SYSMON --> WINLOGS
 
-    %% User Interaction
-    H((You: The Defender)) -->|Analytic Hunting & SPL Queries via Port 8000| E
+    WINLOGS --> UF
 
-    %% Styling
-    style Windows 10 VM (Victim Endpoint) fill:#1e293b,stroke:#38bdf8,stroke-width:2px;
-    style Ubuntu Server 24.04 VM (SIEM) fill:#1e293b,stroke:#f97316,stroke-width:2px;
+    UF -->|"Port 9997"| SPLUNK
+
+    SPLUNK --> SEARCH["SPL Searches"]
+    SEARCH --> INVEST["Threat Hunting & Investigation"]
+
+```
 
 ### Key Skills Demonstrated
 * **SIEM Creation & Configuration:** Built a centralized logging environment using Splunk Enterprise on Ubuntu Server.
