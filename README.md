@@ -4,7 +4,6 @@
 This repository presents the creation, configuration, and testing of a virtualized SOC environment. The objective of this lab is to develop a virtual SIEM, generate detailed and relevant telemetry, and demonstrate the SIEM’s threat detection capabilities through simulated cyber attacks.
 
 ```mermaid
-```mermaid
 flowchart LR
 
     subgraph Windows["Windows 10 Endpoint"]
