@@ -3,33 +3,7 @@
 ## Project Overview
 This repository presents the creation, configuration, and testing of a virtualized SOC environment. The objective of this lab is to develop a virtual SIEM, generate detailed and relevant telemetry, and demonstrate the SIEM’s threat detection capabilities through simulated cyber attacks.
 
-```mermaid
-flowchart LR
-
-    subgraph Windows["Windows 10 Endpoint"]
-        ATTACK["Atomic Red Team<br/>Recon Commands"]
-        SYSMON["Sysmon"]
-        LOGS["Security Telemetry"]
-    end
-
-    subgraph Ubuntu["Ubuntu Server"]
-        SPLUNK["Splunk Enterprise"]
-    end
-
-    ATTACK --> LOGS
-    SYSMON --> LOGS
-
-    LOGS --> FORWARDER["Splunk Universal Forwarder"]
-
-    FORWARDER -->|"Port 9997"| SPLUNK
-
-    SPLUNK --> HUNT["Threat Hunting"]
-
-    SPLUNK --> DETECT["Detection Validation"]
-
-    USER["Security Analyst"] --> SPLUNK
-```
-
+![Diagram view of lab](images/SOCINABOX%DIAGRAM.png)
 
 ### Key Skills Demonstrated
 * **SIEM Creation & Configuration:** Built a centralized logging environment using Splunk Enterprise on Ubuntu Server.
