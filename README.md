@@ -83,7 +83,7 @@ Standard Windows event logs often are too shallow and offer unsatisfactory infor
 
 ### 1. Sysmon Implementation
 1. Downloaded Sysinternals Sysmon to the Windows VM.
-2. Applied the SwiftOnSecurity `sysmonconfig-export.xml` configuration to filter out benign noise and capture high-fidelity security events.
+2. Applied the SwiftOnSecurity `sysmonconfig-export.xml` configuration to filter out benign logs and capture crucial security events.
 3. Executed the installation via elevated Command Prompt: `sysmon64.exe -i sysmonconfig-export.xml -accepteula`.
 
 ### 2. Data Normalization
@@ -93,7 +93,7 @@ Standard Windows event logs often are too shallow and offer unsatisfactory infor
 ---
 
 ## Phase 4: Threat Simulation & Detection Validation
-Conducted three separate attack simulations to verify that the SIEM was correctly ingesting, parsing, and displaying malicious activity.
+Conducted three separate attack simulations to verify that the SIEM was correctly ingesting, parsing, and forwarding malicious activity to be displayed correctly.
 
 ### Simulation A: Brute Force Authentication
 1. **The Attack:** Manually triggered 10 consecutive failed login attempts on the Windows VM to simulate a brute force credential attack.
@@ -120,7 +120,7 @@ Conducted three separate attack simulations to verify that the SIEM was correctl
 ---
 ## MITRE ATT&CK Mapping
 
-To provide additional context for the simulated adversary activity, the commands and attack techniques used throughout this lab were mapped to the MITRE ATT&CK framework. This framework is widely used by security teams to categorize attacker behavior and improve detection coverage.
+For additional context to the simulated adversary activity, the commands and attack techniques were mapped to the MITRE ATT&CK framework below. This framework, which is a "globally-accessible knowledge base of adversary tactics and techniques" according to the MITRE ATT&CK website, is widely used by security teams to categorize attacker behavior and improve detection coverage.
 
 | Simulated Activity                             | ATT&CK Technique                       | Technique ID |
 | ---------------------------------------------- | -------------------------------------- | ------------ |
@@ -131,10 +131,10 @@ To provide additional context for the simulated adversary activity, the commands
 | Registry Run Key Persistence (Atomic Red Team) | Registry Run Keys / Startup Folder     | T1547.001    |
 | PowerShell-Based Attack Execution              | PowerShell                             | T1059.001    |
 
-The successful detection of these activities within Splunk demonstrates the ability to collect, forward, and analyze telemetry associated with common attacker behaviors.
+The successful detection of these activities within Splunk demonstrated the virtualized SIEM's ability to collect, forward, and analyze telemetry associated with common attacker behaviors.
 
 ## Challenges Faced
 
-1. **Splunk Root Execution Deprecation:** During the Ubuntu Splunk installation, running the start command threw a warning that root execution was deprecated. After researching the warning, I purposefully bypassed it using `--run-as-root` to keep the lab environment strictly focused on ingestion rather than complex Linux permission management.
-2. **SIEM Resource Overload:** Initially, the Splunk dashboard showed no logs and displayed a yellow warning sign indicating output degradation. The 4 GB RAM allocation on the VM was struggling to process the realtime "All Time" query of the Windows Security logs. Changing the timeframe scope to "Realtime: 30 Minute Window" immediately resolved the latency and allowed the data to populate.
-3. **EDR/Antivirus Interference:** When unzipping the Atomic Red Team library, Windows Defender triggered severe alerts (flagging `wacatac.b!ml` and `malgent!MSR`) and actively deleted the simulation scripts. To allow the simulation to proceed, I configured a specific exclusion path in Defender using PowerShell (`Add-MpPreference -ExclusionPath "C:\AtomicRedTeam"`), effectively bypassing the host protection.
+1. **Splunk Root Execution Deprecation:** During the Ubuntu Splunk installation, running the start command threw a warning that root execution was deprecated. After researching the warning, I purposefully bypassed it using `--run-as-root` to keep the lab environment strictly focused on ingestion rather than complex Linux permission management. While this allowed me to focus on building the SIEM to move forward with the lab, it does pose a security risk outside of a lab environment. I would not run it as the root user in practice outside of the lab environment to avoid the risk of an attacker exploiting a vulnerability in Splunk while its in root and gaining access to the OS.
+2. **SIEM Resource Overload:** Initially, the Splunk dashboard showed no logs and displayed a yellow warning sign indicating output degradation. The 4 GB RAM allocation on the VM was struggling to process the realtime "All Time" query of the Windows Security logs. Changing the timeframe scope to "Realtime: 30 Minute Window" immediately resolved the latency and allowed the data to populate. This posed a challenge mainly due to no obvious clues of the problem and my lack of experience with splunk requiring me to troubleshoot it with the intuition I had on systems.
+3. **EDR/Antimalware Interference:** When unzipping the Atomic Red Team library, Windows Defender triggered severe alerts (flagging `wacatac.b!ml` and `malgent!MSR`) and actively deleted the simulation scripts. To allow the simulation to proceed, I configured a specific exclusion path in Defender using PowerShell (`Add-MpPreference -ExclusionPath "C:\AtomicRedTeam"`), effectively bypassing the host protection. I also had to go into Windows Defender and manually undo the deletions it had made. Moving forward when simulating adversarial attacks in a virtual environment, I will make sure to configure Defender and any other antimalware solutions accordingly while also taking precautions to protect my host device from that opened attack vector (like turning off network connection when running software/attacks, switching to host-only, etc).
