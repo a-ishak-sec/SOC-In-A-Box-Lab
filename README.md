@@ -33,7 +33,6 @@ The VMware Workstation Pro installer was downloaded from the official Broadcom p
 2. Executed PowerShell's `Get-FileHash` command to verify the SHA hash matched the official documentation (`10fe3a36f525d88aa133118ab3b5a16b18da88d4aa11b14d74e4164b3fb94ba9`).
 
 ![Broadcom Digital Signature](images/Confirming%20VMware%20Installer%20Digital%20Signature.png)
-![Broadcom Official Hash](images/Broadcom%20File%20Hash%20Official%20VM.png)
 ![Calculated Installer Hash](images/Confirming%20File%20Hash%20VM.png)
 
 ### 2. Operating System Verification
