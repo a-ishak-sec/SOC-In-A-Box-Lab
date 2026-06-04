@@ -4,7 +4,20 @@
 This repository presents the creation, configuration, and testing of a virtualized SOC environment. The objective of this lab is to develop a virtual SIEM, generate detailed and relevant telemetry, and demonstrate the SIEM’s threat detection capabilities through simulated cyber attacks.
 
 ![SOC Lab Network and Data Flow Map](images/SOCINABOXDIAGRAM2.png)
+## MITRE ATT&CK Mapping
 
+To provide additional context for the simulated adversary activity, the commands and attack techniques used throughout this lab were mapped to the MITRE ATT&CK framework. This framework is widely used by security teams to categorize attacker behavior and improve detection coverage.
+
+| Simulated Activity | ATT&CK Technique | Technique ID |
+| :--- | :--- | :--- |
+| Failed Login Attempts | Brute Force | **T1110** |
+| `whoami` | System Owner/User Discovery | **T1033** |
+| `net user` | Account Discovery | **T1087** |
+| `ipconfig /all` | System Network Configuration Discovery | **T1016** |
+| Registry Run Key Persistence (Atomic Red Team) | Registry Run Keys / Startup Folder | **T1547.001** |
+| PowerShell-Based Attack Execution | PowerShell | **T1059.001** |
+
+The successful detection of these activities within Splunk demonstrates the ability to collect, forward, and analyze telemetry associated with common attacker behaviors.
 ### Key Skills Demonstrated
 * **SIEM Creation & Configuration:** Built a centralized logging environment using Splunk Enterprise on Ubuntu Server.
 * **Log Enhancement:** Deployed Microsoft Sysmon with custom configuration to capture higher quality in depth windows logs.
